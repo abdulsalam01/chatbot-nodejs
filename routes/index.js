@@ -5,9 +5,9 @@ var prefix = '/api';
 
 router.post(`${prefix}/reply`, messageController._postReply);
 // 
-router.delete(`${prefix}/message/:id`, messageController._removeById);
+router.delete(`${prefix}/messages/:id`, messageController._removeById);
 // 
-router.get(`${prefix}/message/:id`, messageController._getById);
+router.get(`${prefix}/messages/:id`, messageController._getById);
 router.get(`${prefix}/counter`, messageController._counter);
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'NodeJs Bot' });
