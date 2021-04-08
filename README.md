@@ -4,8 +4,8 @@
 _JavaScript, Node, MySQL_
 
 ### Preconfigure
-Import Database in db_backup folder, name of database **same as file name (chatbot)**
-Just type **npm install**
+- Import Database in db_backup folder, name of database **same as file name (chatbot)**
+- Just type **npm install**
 
 ### How to Run
 1) Open terminal **in root of project**
