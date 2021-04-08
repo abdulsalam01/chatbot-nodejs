@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <title>Messenger - Bot</title>
+</head>
+<body>
+    <!-- chatbox wrapper -->
+    <div id="chatbox"></div>
+
+    <div class="wrapper-chat">
+        <form id="formReply">
+            <textarea cols="30" rows="10" placeholder="type your message" name="message"></textarea>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+
+    <!-- additional -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        let counter = 0;
+        let fillDate = [];
+        let statusOfEnd = false;
+        const openConversationKey = ['hi', 'hello', 'there', 'test', 'whatspapp'];
+        const acceptingKey = ['yeah', 'ok', 'yup', 'yes', 'sure', 'ya'];
+        const arrMessage = [];
+
+        $(document).ready(() => {
+            loadCounter();
+
+            if (performance.navigation.type === 1) loadCounter();
+        })
+
+        // extension
+        Date.prototype.isValid = function () {
+            return this.getTime() === this.getTime();
+        };  
+
+        $("#formReply").submit((e) => {
+            e.preventDefault();
+
+            const message = $("[name='message']").val()
+            const request = $.ajax({
+                url: "api/reply",
+                type: "post",
+                data: {message: message, counter: counter}
+            });
+
+            request.then((res) => {
+                $("[name='message']").val(null);
+
+                arrMessage.push({message: res.data, type: res.user});
+                addToChatBox(res.type, res.data);
+
+                if (openConversationKey.includes(res.data)) {
+                    // 
+                    setTimeout(() => {
+                        addToChatBox("bot", "hi, there!");
+                        addToChatBox("bot", "what's your name?");
+                    }, 1000);
+                } else {
+                    if (new Date(res.data).isValid() || statusOfEnd) {
+                        fillDate.push(res.data);
+
+                        setTimeout(() => {
+                            addToChatBox("bot", "want to know how many days till your next birtday?");
+                        }, 1000);
+
+                        statusOfEnd = false;
+                        acceptingKey.includes(res.data) 
+                            ? addToChatBox('bot', `there are ${countDaysToBirth(fillDate[0])} days left until your next birthday`) 
+                            : addToChatBox('bot', `Goodbye!`);
+                    } else {
+                        !statusOfEnd ? setTimeout(() => {
+                            addToChatBox("bot", "what's your birth in (yyyy-mm-dd)?");
+                        }, 1000) : false;
+                    }
+                }
+
+            }).fail((err) => {
+                throw err;
+            });
+        })
+
+        function addToChatBox(type, message) {
+            $("#chatbox").append(`
+            <div class="${type === 'user' ? 'container' : 'container darker'}">
+                <p>${message}</p>
+                <span class="time-right">${type}</span>
+            </div>`);
+        }
+
+        function loadCounter() {
+            const request = $.ajax({
+                url: "api/counter",
+                type: "get"
+            }).then((res) => {
+                counter = res.data;
+            });
+        }
+
+        function countDaysToBirth(date) {
+            const currentYear = new Date().getFullYear();
+            const today = new Date(currentYear, new Date().getMonth(), new Date().getDate());
+            
+            const birthdayParts = date.split("-");
+            const yearBirthday = new Date(currentYear, birthdayParts[1] - 1, birthdayParts[2]);
+            const timDiffInMilliSeconds = yearBirthday.getTime() - today.getTime();
+            const timDiffInDays = timDiffInMilliSeconds / (1000 * 60 * 60 * 24);
+            //
+            return timDiffInDays < 0 ? 0 : timDiffInDays;
+        }
+
+    </script>
+</body>
+</html>
