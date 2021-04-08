@@ -17,7 +17,9 @@ Example: _http://localhost:3000/api/message/1 (id of message equals 1)_
 Example: _http://localhost:3000/api/message/1 (id of deteled message equals 1)_
 
 ### Note
-When Browser is reloaded, the new id of user will generated
+- When Browser is reloaded, the new id of user will generated
+- Dictionary for Yes answers ``('yeah', 'ok', 'yup', 'yes', 'sure', 'ya')``
+
 #### About
 - Writter: Abdul Salam
 - Email: abdulsalam121196@gmail.com

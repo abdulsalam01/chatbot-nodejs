@@ -34,6 +34,7 @@ const counter = (req, res, next) => {
 
 const getById = (req, res, next) => {
     const id = req.params.id;
+    
     connection.query(`SELECT * FROM ${table} WHERE id = ${id}`, (err, rows) => {
         if (err) throw err;
 

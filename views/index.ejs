@@ -67,16 +67,25 @@
                         fillDate.push(res.data);
 
                         setTimeout(() => {
-                            addToChatBox("bot", "want to know how many days till your next birtday?");
+                            statusOfEnd 
+                                ? addToChatBox("bot", "want to know how many days till your next birtday?")
+                                : false;
                         }, 1000);
 
-                        statusOfEnd = false;
-                        acceptingKey.includes(res.data) 
-                            ? addToChatBox('bot', `there are ${countDaysToBirth(fillDate[0])} days left until your next birthday`) 
-                            : addToChatBox('bot', `Goodbye!`);
+                        statusOfEnd = true;
+
+                        if (acceptingKey.includes(res.data) && statusOfEnd) {
+                            addToChatBox('bot', `there are 
+                                ${countDaysToBirth(fillDate[0])} days left until your next birthday`);
+
+                            statusOfEnd = false;
+                        } else {
+                            addToChatBox('bot', `Goodbye!`);
+                        }
+
                     } else {
                         !statusOfEnd ? setTimeout(() => {
-                            addToChatBox("bot", "what's your birth in (yyyy-mm-dd)?");
+                            addToChatBox("bot", `what's your birth in (yyyy-mm-dd) ${res.data}?`);
                         }, 1000) : false;
                     }
                 }
